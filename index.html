@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4ebdd" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Happy 30th, Aiyana 💌</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,800;1,500;1,600&family=Inter:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- COVER -->
+  <section id="cover" class="screen cover" aria-label="Cover">
+    <canvas id="confetti" aria-hidden="true"></canvas>
+    <div class="cover-inner">
+      <p class="eyebrow">Special delivery · <span id="cover-year"></span></p>
+      <h1 id="cover-title" class="cover-title"></h1>
+      <p id="cover-sub" class="cover-sub"></p>
+
+      <div class="fan" id="fan" aria-hidden="true"></div>
+
+      <button id="open-btn" class="open-btn" type="button">
+        Open your postcards <span class="count" id="cover-count"></span>
+      </button>
+      <p class="cover-hint">Swipe to browse · tap a card to flip it</p>
+    </div>
+  </section>
+
+  <!-- DECK -->
+  <section id="deck" class="screen deck" aria-label="Postcards" hidden>
+    <header class="topbar">
+      <button class="icon-btn" id="home-btn" type="button" aria-label="Back to cover">✉︎</button>
+      <div class="progress">
+        <div class="segments" id="segments"></div>
+        <div class="counter" id="counter">1 / 1</div>
+      </div>
+      <span class="icon-btn ghost" aria-hidden="true"></span>
+    </header>
+
+    <div class="track" id="track" tabindex="0"></div>
+
+    <footer class="bottombar">
+      <button class="nav-btn" id="prev-btn" type="button" aria-label="Previous postcard">‹</button>
+      <p class="hint" id="hint">Tap the card to flip it over</p>
+      <button class="nav-btn" id="next-btn" type="button" aria-label="Next postcard">›</button>
+    </footer>
+  </section>
+
+  <template id="card-tpl">
+    <div class="slide">
+      <div class="card" role="button" tabindex="0" aria-pressed="false">
+        <div class="card-inner">
+          <!-- FRONT -->
+          <div class="face front">
+            <div class="photo-wrap">
+              <img class="photo" alt="" decoding="async" />
+              <div class="ribbon" hidden>Placeholder</div>
+            </div>
+            <div class="stamp">
+              <div class="stamp-art">
+                <span class="stamp-num">30</span>
+                <span class="stamp-txt">Flirty &amp;<br />Thriving</span>
+              </div>
+            </div>
+            <svg class="postmark" viewBox="0 0 200 120" aria-hidden="true">
+              <defs><path id="pm-circle" d="M60,60 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" /></defs>
+              <circle cx="60" cy="60" r="46" />
+              <circle cx="60" cy="60" r="30" />
+              <text class="pm-ring"><textPath href="#pm-circle" startOffset="0" textLength="234" lengthAdjust="spacing">★ AIYANA ★ TURNING 30 ★ HAPPY BIRTHDAY</textPath></text>
+              <text class="pm-year" x="60" y="66" text-anchor="middle">2026</text>
+              <path class="waves" d="M108 38 q11 -8 22 0 t22 0 t22 0 M108 52 q11 -8 22 0 t22 0 t22 0 M108 66 q11 -8 22 0 t22 0 t22 0 M108 80 q11 -8 22 0 t22 0 t22 0" />
+            </svg>
+            <div class="caption">
+              <span class="greet">Love from</span>
+              <span class="from-big"></span>
+              <span class="flip-cue">tap to flip ↻</span>
+            </div>
+          </div>
+
+          <!-- BACK -->
+          <div class="face back">
+            <div class="back-head">
+              <span class="pc-label">Post Card</span>
+              <div class="mini-stamp"><span>30</span></div>
+            </div>
+            <div class="back-body"><div class="msg">
+              <p class="section-label">When we were 30&hellip;</p>
+              <p class="hand at30"></p>
+              <p class="section-label">For you, Aiyana</p>
+              <p class="hand wish"></p>
+              <p class="hand sig"><span class="closing"></span> <span class="sig-name"></span></p>
+              <p class="hand ps" hidden></p>
+            </div></div>
+            <div class="back-foot">
+              <span class="to">To: <b>Aiyana</b>, 30 Flirty &amp; Thriving Lane</span>
+              <span class="flip-cue">↻</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="cards.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
