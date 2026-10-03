@@ -53,13 +53,23 @@
 
   <template id="card-tpl">
     <div class="slide">
-      <div class="card" role="button" tabindex="0" aria-pressed="false">
+      <div class="card" role="group" tabindex="0" aria-pressed="false">
         <div class="card-inner">
           <!-- FRONT -->
           <div class="face front">
             <div class="photo-wrap">
-              <img class="photo" alt="" decoding="async" />
-              <div class="ribbon" hidden>Placeholder</div>
+              <div class="photo-stage">
+                <img class="photo" alt="" decoding="async" />
+                <div class="photo-nav" hidden>
+                  <button type="button" class="photo-zone photo-zone-prev" aria-label="Previous photo"></button>
+                  <button type="button" class="photo-zone photo-zone-next" aria-label="Next photo"></button>
+                  <button type="button" class="photo-arrow photo-prev" aria-label="Previous photo">‹</button>
+                  <button type="button" class="photo-arrow photo-next" aria-label="Next photo">›</button>
+                  <div class="photo-dots"></div>
+                </div>
+                <div class="ribbon" hidden>Placeholder</div>
+              </div>
+              <p class="photo-caption" hidden></p>
             </div>
             <div class="stamp">
               <div class="stamp-art">
@@ -78,7 +88,7 @@
             <div class="caption">
               <span class="greet">Love from</span>
               <span class="from-big"></span>
-              <span class="flip-cue">tap to flip ↻</span>
+              <button type="button" class="flip-cue flip-btn">tap to flip ↻</button>
             </div>
           </div>
 
@@ -89,12 +99,15 @@
               <div class="mini-stamp"><span>30</span></div>
             </div>
             <div class="back-body"><div class="msg">
-              <p class="section-label">When we were 30&hellip;</p>
-              <p class="hand at30"></p>
-              <p class="section-label">For you, Aiyana</p>
-              <p class="hand wish"></p>
-              <p class="hand sig"><span class="closing"></span> <span class="sig-name"></span></p>
-              <p class="hand ps" hidden></p>
+              <div class="structured">
+                <p class="section-label">When we were 30&hellip;</p>
+                <p class="hand at30"></p>
+                <p class="section-label">For you, Aiyana</p>
+                <p class="hand wish"></p>
+                <p class="hand sig"><span class="closing"></span> <span class="sig-name"></span></p>
+                <p class="hand ps" hidden></p>
+              </div>
+              <p class="hand letter" hidden></p>
             </div></div>
             <div class="back-foot">
               <span class="to">To: <b>Aiyana</b>, 30 Flirty &amp; Thriving Lane</span>

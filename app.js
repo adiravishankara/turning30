@@ -1,7 +1,21 @@
 (function () {
   "use strict";
   var SITE = window.SITE || { name: "Aiyana", year: new Date().getFullYear() };
-  var CARDS = (window.CARDS || []).filter(function (c) { return c && c.photo; });
+
+  function photosOf(c) {
+    if (c.photos && c.photos.length) {
+      return c.photos.map(function (p) {
+        if (typeof p === "string") return { src: p, caption: "", focus: "" };
+        return { src: p.src || p.photo || "", caption: p.caption || "", focus: p.focus || "" };
+      }).filter(function (p) { return p.src; });
+    }
+    if (c.photo) {
+      return [{ src: c.photo, caption: c.caption || "", focus: c.focus || "" }];
+    }
+    return [];
+  }
+
+  var CARDS = (window.CARDS || []).filter(function (c) { return c && photosOf(c).length; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
 
   var cover = $("#cover"), deck = $("#deck"), track = $("#track");
@@ -39,8 +53,9 @@
     m.style.setProperty("--d", 0.45 - i * 0.15 + "s");
     m.style.zIndex = p.z;
     var img = document.createElement("img");
-    img.src = c.photo; img.alt = "";
-    if (c.focus) img.style.objectPosition = c.focus;
+    var first = photosOf(c)[0];
+    img.src = first.src; img.alt = "";
+    if (first.focus) img.style.objectPosition = first.focus;
     m.appendChild(img);
     fan.appendChild(m);
   });
@@ -48,21 +63,88 @@
   heart.className = "heart"; heart.style.zIndex = 4; heart.textContent = "30";
   fan.appendChild(heart);
 
+  function stopFlip(el, fn) {
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      if (fn) fn();
+    });
+  }
+
+  function setupCarousel(node, cardEl, photos, from) {
+    var img = $(".photo", node);
+    var nav = $(".photo-nav", node);
+    var dotsEl = $(".photo-dots", node);
+    var captionEl = $(".photo-caption", node);
+    var multi = photos.length > 1;
+    var idx = 0;
+
+    function show(n) {
+      idx = (n + photos.length) % photos.length;
+      var p = photos[idx];
+      img.src = p.src;
+      img.alt = (p.caption ? p.caption + " — " : "") + "Photo from " + from;
+      img.style.objectPosition = p.focus || "";
+      if (multi) {
+        captionEl.hidden = false;
+        captionEl.textContent = p.caption || "";
+      } else if (p.caption) {
+        captionEl.hidden = false;
+        captionEl.textContent = p.caption;
+      } else {
+        captionEl.hidden = true;
+        captionEl.textContent = "";
+      }
+      if (multi) {
+        Array.prototype.forEach.call(dotsEl.children, function (d, i) {
+          d.classList.toggle("on", i === idx);
+          d.setAttribute("aria-current", i === idx ? "true" : "false");
+        });
+      }
+    }
+
+    if (multi) {
+      cardEl.classList.add("has-carousel");
+      nav.hidden = false;
+      photos.forEach(function (p, i) {
+        var dot = document.createElement("button");
+        dot.type = "button";
+        dot.setAttribute("aria-label", "Photo " + (i + 1) + " of " + photos.length);
+        stopFlip(dot, function () { show(i); });
+        dotsEl.appendChild(dot);
+        if (i > 0) {
+          var pre = new Image();
+          pre.src = p.src;
+        }
+      });
+      stopFlip($(".photo-prev", node), function () { show(idx - 1); });
+      stopFlip($(".photo-next", node), function () { show(idx + 1); });
+      stopFlip($(".photo-zone-prev", node), function () { show(idx - 1); });
+      stopFlip($(".photo-zone-next", node), function () { show(idx + 1); });
+    }
+
+    show(0);
+    return show;
+  }
+
   /* ---------- build cards ---------- */
   var tpl = $("#card-tpl");
   var tilts = ["-1.2deg", "0.9deg", "-0.6deg", "1.3deg", "-1deg", "0.5deg"];
   CARDS.forEach(function (c, i) {
     var node = tpl.content.firstElementChild.cloneNode(true);
     var card = $(".card", node);
+    var photos = photosOf(c);
     card.style.setProperty("--tilt", tilts[i % tilts.length]);
-    card.setAttribute("aria-label", "Postcard " + (i + 1) + " of " + total + " from " + c.from + ". Tap to flip.");
+    var aria = "Postcard " + (i + 1) + " of " + total + " from " + c.from + ". Tap to flip.";
+    if (photos.length > 1) {
+      aria += " Arrows or side taps change photos.";
+    }
+    card.setAttribute("aria-label", aria);
 
     var img = $(".photo", node);
-    img.src = c.photo;
-    img.alt = "Photo from " + c.from;
     if (i > 1) img.loading = "lazy";
-    if (c.focus) img.style.objectPosition = c.focus;
     if (c.placeholder) $(".ribbon", node).hidden = false;
+    setupCarousel(node, card, photos, c.from);
 
     // unique id for postmark text path
     var pid = "pm-" + i;
@@ -73,15 +155,25 @@
     $(".pm-year", node).textContent = SITE.year;
 
     $(".from-big", node).textContent = c.from;
-    $(".at30", node).textContent = c.at30 || "";
-    $(".wish", node).textContent = c.wish || "";
-    $(".closing", node).textContent = c.closing || "With love,";
-    $(".sig-name", node).textContent = c.from;
     $(".back-foot b", node).textContent = SITE.name;
-    var labels = node.querySelectorAll(".section-label");
-    labels[1].textContent = "For you, " + SITE.name;
-    if (!c.at30) { labels[0].hidden = true; $(".at30", node).hidden = true; }
-    if (c.signoff) { var ps = $(".ps", node); ps.hidden = false; ps.textContent = c.signoff; }
+
+    var structured = $(".structured", node);
+    var letterEl = $(".letter", node);
+    if (c.letter != null && String(c.letter).length) {
+      structured.hidden = true;
+      letterEl.hidden = false;
+      letterEl.textContent = c.letter;
+    } else {
+      letterEl.hidden = true;
+      $(".at30", node).textContent = c.at30 || "";
+      $(".wish", node).textContent = c.wish || "";
+      $(".closing", node).textContent = c.closing || "With love,";
+      $(".sig-name", node).textContent = c.from;
+      var labels = node.querySelectorAll(".section-label");
+      labels[1].textContent = "For you, " + SITE.name;
+      if (!c.at30) { labels[0].hidden = true; $(".at30", node).hidden = true; }
+      if (c.signoff) { var ps = $(".ps", node); ps.hidden = false; ps.textContent = c.signoff; }
+    }
 
     var flip = function () {
       var on = !card.classList.contains("flipped");
@@ -95,8 +187,12 @@
       cue.textContent = more ? "more ↓" : "↻";
     };
     body.addEventListener("scroll", checkMore, { passive: true });
-    card.addEventListener("click", flip);
+    card.addEventListener("click", function (e) {
+      if (e.target.closest(".photo-nav")) return;
+      flip();
+    });
     card.addEventListener("keydown", function (e) {
+      if (e.target !== card) return;
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); }
     });
     track.appendChild(node);

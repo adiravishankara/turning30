@@ -1,21 +1,28 @@
 /*
- * ✉️  POSTCARDS DATA — this is the only file you need to edit.
+ * ✉️  POSTCARDS DATA — this is the only file you need to edit by hand.
  *
- * To add a card: drop the photo into /photos, then copy one of the { ... }
- * blocks below and change the fields. Cards appear in the order listed.
+ * To add a card: drop the photo(s) into /photos, then copy one of the { ... }
+ * blocks below and change the fields. Cards appear in the order listed
+ * (the import script sorts them alphabetically by `from`).
  *
- *   from      – who it's from (shown as "With love, <from>")
- *   photo     – path to the photo, e.g. "photos/jane.jpg"
+ *   from      – who it's from (shown as "Love from <from>" / "With love, <from>")
+ *   photo     – path to a single photo, e.g. "photos/jane.jpg"
+ *   photos    – (optional) several photos instead of `photo`:
+ *               [ { src: "photos/jane/01.jpg", caption: "a note", focus: "center" } ]
+ *               `caption` is the handwritten strip under that photo (optional).
+ *               `focus` is per-photo crop (CSS object-position).
+ *   caption   – (optional) handwritten strip under a single `photo`
+ *   letter    – (optional) freeform back text, rendered verbatim with line breaks.
+ *               Use this instead of at30 / wish / signoff.
  *   at30      – what they were doing / what happened when they were 30
  *   wish      – their birthday message for Aiyana
  *   signoff   – (optional) a P.S. shown under the signature
  *   closing   – (optional) replaces "With love," (e.g. "Cheers," or "XOXO,")
- *   focus     – (optional) which part of the photo to keep when it's cropped,
- *               CSS object-position style: "center", "30% 50%", "top", ...
+ *   focus     – (optional) crop for a single `photo`, e.g. "30% 50%" or "top"
  *   placeholder – (optional) true marks a demo card with a PLACEHOLDER ribbon.
- *               Delete those cards once real ones are in.
  *
  * Line breaks: use \n inside the text to start a new line.
+ * Or run:  python3 tools/build_cards.py /path/to/submissions
  */
 
 window.SITE = {
@@ -38,17 +45,13 @@ window.CARDS = [
   },
   {
     placeholder: true,
-    from: "Friend Name",
-    photo: "photos/placeholder-1.jpg",
-    at30: "PLACEHOLDER: what this friend was up to at 30 goes here.",
-    wish: "PLACEHOLDER: their birthday wish for Aiyana goes here.",
-    signoff: "PLACEHOLDER: optional P.S.",
-  },
-  {
-    placeholder: true,
-    from: "Another Friend",
-    photo: "photos/placeholder-2.jpg",
-    at30: "PLACEHOLDER: what this friend was up to at 30 goes here.",
-    wish: "PLACEHOLDER: their birthday wish for Aiyana goes here.",
+    from: "PLACEHOLDER",
+    photos: [
+      { src: "photos/placeholder/01.jpg", caption: "PLACEHOLDER: first photo" },
+      { src: "photos/placeholder/02.jpg", caption: "PLACEHOLDER: second photo" },
+      { src: "photos/placeholder/03.jpg", caption: "PLACEHOLDER: third photo" },
+    ],
+    letter:
+      "PLACEHOLDER:\nThis is sample letter text for the back of the card.\n\nIt is not a real message.",
   },
 ];
