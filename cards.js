@@ -23,11 +23,11 @@ window.SITE = {
     },
     {
       "src": "photos/aiyana/04.jpg",
-      "focus": "40% 45%"
+      "focus": "18% 42%"
     },
     {
-      "src": "photos/aiyana/07.jpg",
-      "focus": "78% 42%"
+      "src": "photos/aiyana/05.jpg",
+      "focus": "72% 40%"
     }
   ],
   "gallery": [
