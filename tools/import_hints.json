@@ -1,0 +1,54 @@
+{
+  "displayNames": {
+    "Olivia": "Olivia & Graeme",
+    "corrine": "Corrine",
+    "Kala & Ravi": "Kala & Ravi"
+  },
+  "captions": {
+    "Aaron/IMG_0395.jpg": "Oh the second pic in the yellow pants.  Is probably from 2021 but I threw it in because it was my personal record for a salmon",
+    "corrine/6.jpg": "Snowboarding Kamloops 2002",
+    "corrine/corinne and dive buddy glen.jpg": "scuba diving Belize 2002",
+    "corrine/laughing bird caye.jpg": "Laughing Bird Caye 2002 (Left)"
+  },
+  "focus": {
+    "Olivia": "36% 55%"
+  },
+  "cover": ["IMG_0820.jpg", "IMG_0875.jpg", "IMG_0918.jpg"],
+  "coverFocus": {
+    "IMG_0820.jpg": "50% 68%",
+    "IMG_0875.jpg": "40% 45%",
+    "IMG_0918.jpg": "78% 42%"
+  },
+  "photoOrder": {
+    "Adi": [
+      "IMG_3949_Original.jpg",
+      "IMG_4064_Original.jpg",
+      "IMG_2141_Original.jpg",
+      "IMG_4152_Original.jpg",
+      "IMG_2307_Original.jpg",
+      "IMG_2317_Original.jpg",
+      "IMG_2318_Original.jpg",
+      "IMG_4197_Original.jpg",
+      "IMG_2026_Original.jpg"
+    ],
+    "Shyanne": [
+      "IMG_5307.jpg",
+      "IMG_5973.jpg",
+      "IMG_6140.jpg",
+      "IMG_6444.jpg",
+      "IMG_6787.jpg",
+      "IMG_6809.jpg",
+      "IMG_6834.jpg",
+      "IMG_7073.jpg"
+    ],
+    "_aiyana": [
+      "IMG_0820.jpg",
+      "IMG_0862.jpg",
+      "IMG_0871.jpg",
+      "IMG_0875.jpg",
+      "IMG_0886.jpg",
+      "IMG_0910.jpg",
+      "IMG_0918.jpg"
+    ]
+  }
+}

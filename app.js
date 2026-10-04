@@ -45,7 +45,13 @@
     { r: "-15deg", x: "-40px", y: "10px", z: 1 },
     { r: "11deg", x: "40px", y: "0px", z: 2 },
   ];
-  CARDS.slice(0, 3).forEach(function (c, i) {
+  var fanPhotos = (SITE.coverPhotos && SITE.coverPhotos.length)
+    ? SITE.coverPhotos.map(function (p) {
+        return typeof p === "string" ? { src: p } : p;
+      })
+    : CARDS.slice(0, 3).map(function (c) { return photosOf(c)[0]; });
+  fanPhotos.slice(0, 3).forEach(function (first, i) {
+    if (!first || !first.src) return;
     var m = document.createElement("div");
     m.className = "mini";
     var p = fanPos[i];
@@ -53,7 +59,6 @@
     m.style.setProperty("--d", 0.45 - i * 0.15 + "s");
     m.style.zIndex = p.z;
     var img = document.createElement("img");
-    var first = photosOf(c)[0];
     img.src = first.src; img.alt = "";
     if (first.focus) img.style.objectPosition = first.focus;
     m.appendChild(img);
@@ -85,10 +90,7 @@
       img.src = p.src;
       img.alt = (p.caption ? p.caption + " — " : "") + "Photo from " + from;
       img.style.objectPosition = p.focus || "";
-      if (multi) {
-        captionEl.hidden = false;
-        captionEl.textContent = p.caption || "";
-      } else if (p.caption) {
+      if (p.caption) {
         captionEl.hidden = false;
         captionEl.textContent = p.caption;
       } else {
@@ -143,7 +145,6 @@
 
     var img = $(".photo", node);
     if (i > 1) img.loading = "lazy";
-    if (c.placeholder) $(".ribbon", node).hidden = false;
     setupCarousel(node, card, photos, c.from);
 
     // unique id for postmark text path
@@ -162,7 +163,12 @@
     if (c.letter != null && String(c.letter).length) {
       structured.hidden = true;
       letterEl.hidden = false;
-      letterEl.textContent = c.letter;
+      letterEl.replaceChildren();
+      String(c.letter).split("\n").forEach(function (line) {
+        var p = document.createElement("p");
+        p.textContent = line;
+        letterEl.appendChild(p);
+      });
     } else {
       letterEl.hidden = true;
       $(".at30", node).textContent = c.at30 || "";
@@ -205,9 +211,28 @@
   var end = document.createElement("div");
   end.className = "slide";
   end.innerHTML =
-    '<div class="end"><div class="big">🎂</div><h2></h2><p>That’s every postcard (for now).</p>' +
+    '<div class="end"><div class="big">🎂</div><h2></h2><p class="end-note">That’s every postcard.</p>' +
+    '<div class="end-gallery" hidden></div>' +
     '<button type="button">Read them again</button></div>';
   $("h2", end).textContent = "Happy 30th, " + SITE.name + "!";
+  var gallery = SITE.gallery || [];
+  var gal = $(".end-gallery", end);
+  if (gallery.length && gal) {
+    gal.hidden = false;
+    var rots = ["-8deg", "6deg", "-3deg", "9deg", "-6deg", "4deg", "-2deg"];
+    gallery.forEach(function (item, i) {
+      var src = typeof item === "string" ? item : item.src;
+      var fig = document.createElement("figure");
+      fig.className = "end-polaroid";
+      fig.style.setProperty("--r", rots[i % rots.length]);
+      var im = document.createElement("img");
+      im.src = src;
+      im.alt = "";
+      im.loading = "lazy";
+      fig.appendChild(im);
+      gal.appendChild(fig);
+    });
+  }
   $("button", end).addEventListener("click", function () { goTo(0); });
   track.appendChild(end);
 

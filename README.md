@@ -10,25 +10,20 @@ Served as plain files from the repo root (GitHub Pages, including under
 
 ## Add a postcard by hand
 
-1. Put the photo in `photos/` (a JPG around 1200px wide is plenty).
-   For several photos from one person, use a folder: `photos/jane/01.jpg`, `02.jpg`.
+1. Put the photo in `photos/<name>/` (a JPG around 1200–1600px is plenty).
 2. Open `cards.js` and copy one `{ ... }` block in `window.CARDS`, then fill in:
 
    - `from` — who it's from
    - `photo` — single photo path, **or** `photos: [{ src, caption?, focus? }]`
-   - `letter` — optional freeform back text (kept verbatim, including line breaks).
+   - `letter` — freeform back text (kept verbatim, including line breaks).
      Use this instead of `at30` / `wish` / `signoff`.
-   - `at30`, `wish`, and optionally `signoff`, `closing`, `focus`
-   - `caption` — optional handwritten strip under a single `photo`
-
-   Cards show in the order listed. Delete the `placeholder: true` demo card
-   once real ones are in.
+   - optionally `signoff`, `closing`, `focus`, `caption`
 
 `focus` controls the crop when a photo doesn't fit the card's shape,
-e.g. `"30% 50%"` keeps the left-middle of the photo. Use `\n` for a line break.
+e.g. `"30% 50%"`. Use `\n` for a line break.
 
-To keep a hand-edited card when you later run the folder import (Olivia &
-Graeme live here), put it in `manual_cards.js` using quoted JSON keys.
+To keep a hand-edited card when you later run the folder import, put it in
+`manual_cards.js` using quoted JSON keys.
 
 ## Add postcards from a folder of submissions
 
@@ -36,18 +31,20 @@ Organize files like this:
 
     MainFolder/
       Person Name/
-        photo.png          + blurb.txt
+        photo.jpg          + Main.txt
       Other Name/
-        photo1.png
+        photo1.jpg
         photo2.jpg
-        main-blurb.txt
+        Main.txt
         caption1.txt       # optional; pairs with photo1
-        caption2.txt
+      _aiyana/             # optional loose photos for the cover + end gallery
 
+`Main.txt`, `blurb.txt`, and `main-blurb.txt` are all treated as the letter.
 Image extensions may be `png`, `jpg`, `jpeg`, `heic`, or `webp` (any case).
-The folder name becomes `from`. The blurb is copied verbatim into `letter`.
-Photos are resized to about 1200px, EXIF-rotated, and saved as JPEGs under
-`photos/<slug>/`. Cards are sorted alphabetically by name.
+The folder name becomes `from` (title-cased). Display-name overrides and
+photo captions that live in the letter (not separate files) go in
+`tools/import_hints.json`. Photos land in `photos/<slug>/`. Cards are sorted
+alphabetically by display name.
 
 Install (once):
 
@@ -58,14 +55,10 @@ Run from the repo root:
 
     python3 tools/build_cards.py /path/to/MainFolder
 
-That regenerates `cards.js` and writes photos. Manual entries in
-`manual_cards.js` are merged in, unless a folder with the same person name
-is present (so Olivia & Graeme stay until their folder arrives).
-
     python3 tools/build_cards.py /path/to/MainFolder --no-manual
     python3 tools/build_cards.py /path/to/MainFolder --no-sort
 
-Folders missing a photo or a blurb print a clear warning.
+Folders missing a photo or a letter print a clear warning.
 
 ## Run locally
 
